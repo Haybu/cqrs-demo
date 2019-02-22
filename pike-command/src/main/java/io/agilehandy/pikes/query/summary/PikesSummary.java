@@ -15,19 +15,11 @@
  */
 
 
-package io.agilehandy.pikes.commands;
-
-import lombok.Data;
+package io.agilehandy.pikes.query.summary;
 
 /**
  * @author Haytham Mohamed
  **/
-@Data
-public class PikeBaseCommand {
 
-	private String subjectId;
-
-	public PikeBaseCommand(String subjectId) {
-		this.subjectId = subjectId;
-	}
+public class PikesSummary {
 }

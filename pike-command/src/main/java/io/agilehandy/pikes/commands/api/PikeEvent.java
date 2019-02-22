@@ -15,23 +15,34 @@
  */
 
 
-package io.agilehandy.pikes.events;
+package io.agilehandy.pikes.commands.api;
 
-import lombok.Value;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Map;
 
 /**
  * @author Haytham Mohamed
  **/
-@Value
-public class PikeEvent {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class PikeEvent implements Serializable {
 
 	private String eventSubject;
 
 	private PikeEventType eventType;
 
+	@JsonSerialize(using = LocalDateSerializer.class)
+	@JsonDeserialize(using = LocalDateDeserializer.class)
 	private LocalDate eventDate;
 
 	private Map<String, Object> eventMetadata;

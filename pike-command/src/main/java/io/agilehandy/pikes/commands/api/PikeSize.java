@@ -15,27 +15,24 @@
  */
 
 
-package io.agilehandy.pikes.events;
-
-import lombok.AllArgsConstructor;
-import lombok.Value;
-
-import java.time.Instant;
-import java.util.Map;
+package io.agilehandy.pikes.commands.api;
 
 /**
  * @author Haytham Mohamed
  **/
-@Value
-@AllArgsConstructor
-public class PikeEvent {
+public enum PikeSize {
 
-	String eventSubject;
+	SMALL ("small"),
+	MEDIUM ("medium"),
+	LARGE ("large");
 
-	PikeEventType eventType;
+	private String value;
 
-	Instant eventDate;
+	private PikeSize(String val) {
+		this.value = val;
+	}
 
-	Map<String, Object> eventMetadata;
-
+	public String getValue() {
+		return this.value;
+	}
 }

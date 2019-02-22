@@ -15,24 +15,26 @@
  */
 
 
-package io.agilehandy.pikes.aggregate;
+package io.agilehandy.pikes.commands.api;
+
+import lombok.Value;
+
+import java.time.LocalDate;
 
 /**
  * @author Haytham Mohamed
  **/
-public enum PikeSize {
+@Value
+public class PikeRentCommand extends PikeBaseCommand {
 
-	SMALL ("small"),
-	MEDIUM ("medium"),
-	LARGE ("large");
+	private String location;
+	private LocalDate startTime;
+	private String rentedBy;
 
-	private String value;
-
-	private PikeSize(String val) {
-		this.value = val;
-	}
-
-	public String getValue() {
-		return this.value;
+	public PikeRentCommand(String subjectId, String location, String rentedBy) {
+		super(subjectId);
+		this.location = location;
+		this.startTime = LocalDate.now();
+		this.rentedBy = rentedBy;
 	}
 }

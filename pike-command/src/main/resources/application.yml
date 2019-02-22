@@ -10,13 +10,13 @@ spring:
       bindings:
         output:
           destination: pike-events
-          producer.header-mode: headers
+          producer.header-mode: raw
           contentType: application/json
         input:
           destination: pike-events
-          consumer.header-mode: headers
+          consumer.header-mode: raw
           contentType: application/json
-          group: pike-events
+          group: pike-events-group
       kafka:
         streams:
           binder:
@@ -24,6 +24,8 @@ spring:
               commit.interval.ms: 1000
               default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
               default.value.serde: org.apache.kafka.common.serialization.Serdes$BytesSerde
+        binder:
+          brokers: localhost:9092
 
 
 

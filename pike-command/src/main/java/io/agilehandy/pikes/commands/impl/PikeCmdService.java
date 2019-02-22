@@ -15,11 +15,12 @@
  */
 
 
-package io.agilehandy.pikes.aggregate;
+package io.agilehandy.pikes.commands.impl;
 
-import io.agilehandy.pikes.commands.PikeCreateCommand;
-import io.agilehandy.pikes.commands.PikeRentCommand;
-import io.agilehandy.pikes.commands.PikeReturnCommand;
+import io.agilehandy.pikes.commands.api.PikeCreateCommand;
+import io.agilehandy.pikes.commands.api.PikeRentCommand;
+import io.agilehandy.pikes.commands.api.PikeReturnCommand;
+import io.agilehandy.pikes.commands.api.Pike;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

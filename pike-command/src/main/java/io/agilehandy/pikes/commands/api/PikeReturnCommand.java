@@ -15,25 +15,24 @@
  */
 
 
-package io.agilehandy.pikes.events;
+package io.agilehandy.pikes.commands.api;
 
 import lombok.Value;
 
 import java.time.LocalDate;
-import java.util.Map;
 
 /**
  * @author Haytham Mohamed
  **/
 @Value
-public class PikeEvent {
+public class PikeReturnCommand extends PikeBaseCommand {
 
-	private String eventSubject;
+	private final LocalDate endDate;
+	private final String location;
 
-	private PikeEventType eventType;
-
-	private LocalDate eventDate;
-
-	private Map<String, Object> eventMetadata;
-
+	public PikeReturnCommand(String subjectId, String location) {
+		super(subjectId);
+		this.endDate = LocalDate.now();
+		this.location = location;
+	}
 }

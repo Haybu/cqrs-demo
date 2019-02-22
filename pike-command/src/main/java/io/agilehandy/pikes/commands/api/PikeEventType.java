@@ -15,27 +15,28 @@
  */
 
 
-package io.agilehandy.pikes.commands;
-
-import io.agilehandy.pikes.aggregate.PikeSize;
-import lombok.Data;
+package io.agilehandy.pikes.commands.api;
 
 /**
  * @author Haytham Mohamed
  **/
-@Data
-public class PikeCreateCommand extends PikeBaseCommand {
+public enum PikeEventType {
 
-	private String location;
-	private Double ratePerHour;
-	private PikeSize size;
+	PIKE_CREATED ("PIKE_CREATED"),
+	PIKE_RENTED ("PIKE_RENTED"),
+	PIKE_RETURNED ("PIKE_RETURNED")
+	;
 
-	public PikeCreateCommand(String id, String location
-			, Double ratePerHour, PikeSize size){
-		super(id);
-		this.ratePerHour = ratePerHour;
-		this.location = location;
-		this.size = size;
+	private String value;
+
+	private PikeEventType(String value)
+	{
+		this.value = value;
+	}
+
+	public String getValue()
+	{
+		return this.value;
 	}
 
 }

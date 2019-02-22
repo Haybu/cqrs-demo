@@ -15,17 +15,20 @@
  */
 
 
-package io.agilehandy.pikes.aggregate;
+package io.agilehandy.pikes.commands.impl;
 
-import io.agilehandy.pikes.commands.PikeCreateCommand;
-import io.agilehandy.pikes.commands.PikeRentCommand;
-import io.agilehandy.pikes.commands.PikeReturnCommand;
+import io.agilehandy.pikes.commands.api.Pike;
+import io.agilehandy.pikes.commands.api.PikeCreateCommand;
+import io.agilehandy.pikes.commands.api.PikeRentCommand;
+import io.agilehandy.pikes.commands.api.PikeReturnCommand;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author Haytham Mohamed
@@ -61,10 +64,10 @@ public class PikeCmdController {
 	/*
 	hidden behind a proxy. Responsible to read aggregates only
 	 */
-	//@GetMapping("/")
-	//public List<Pike> allPikes() {
-	//	return pikeService.getAllPikes();
-	//}
+	@GetMapping("/")
+	public List<Pike> allPikes() {
+		return pikeService.getAllPikes();
+	}
 
 	/*
 	hidden behind a proxy. Responsible to read aggregates only

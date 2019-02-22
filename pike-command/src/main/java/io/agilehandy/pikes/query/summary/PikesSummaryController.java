@@ -15,24 +15,10 @@
  */
 
 
-package io.agilehandy.pikes.commands;
-
-import lombok.Data;
-
-import java.time.LocalDate;
+package io.agilehandy.pikes.query.summary;
 
 /**
  * @author Haytham Mohamed
  **/
-@Data
-public class PikeReturnCommand extends PikeBaseCommand {
-
-	private final LocalDate endDate;
-	private final String location;
-
-	public PikeReturnCommand(String subjectId, String location) {
-		super(subjectId);
-		this.endDate = LocalDate.now();
-		this.location = location;
-	}
+public class PikesSummaryController {
 }

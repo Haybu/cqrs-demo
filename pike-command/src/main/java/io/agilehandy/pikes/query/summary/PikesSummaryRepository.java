@@ -15,29 +15,7 @@
  */
 
 
-package io.agilehandy.pikes.events;
+package io.agilehandy.pikes.query.summary;
 
-/**
- * @author Haytham Mohamed
- **/
-public enum PikeEventType {
-
-	PIKE_CREATED ("pike_created"),
-	PIKE_RENTED ("pike_rented"),
-	PIKE_RETURNED ("pike_returned")
-	;
-
-	private String value;
-
-	private PikeEventType(String value)
-	{
-		this.value = value;
-	}
-
-	public String getValue()
-	{
-		return this.value;
-	}
-
-
+public interface PikesSummaryRepository {
 }

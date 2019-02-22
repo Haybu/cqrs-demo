@@ -15,8 +15,9 @@
  */
 
 
-package io.agilehandy.pikes.aggregate;
+package io.agilehandy.pikes.commands.impl;
 
+import io.agilehandy.pikes.commands.api.Pike;
 import io.agilehandy.pikes.pubsub.PikeEventPubSub;
 import org.apache.kafka.streams.state.KeyValueIterator;
 import org.apache.kafka.streams.state.QueryableStoreTypes;
@@ -49,14 +50,14 @@ public class PikeCmdRepository {
 	public Pike findById(String id) {
 		ReadOnlyKeyValueStore<String, Pike> queryStore =
 				queryableStoreRegistry.getQueryableStoreType(PikeEventPubSub.EVENTS_SNAPSHOT
-								, QueryableStoreTypes.keyValueStore());
+								, QueryableStoreTypes.<String, Pike>keyValueStore());
 		return queryStore.get(id);
 	}
 
 	public List<Pike> findAll() {
 		ReadOnlyKeyValueStore<String, Pike> queryStore =
 				queryableStoreRegistry.getQueryableStoreType(PikeEventPubSub.EVENTS_SNAPSHOT
-						, QueryableStoreTypes.keyValueStore());
+						, QueryableStoreTypes.<String, Pike>keyValueStore());
 		KeyValueIterator<String, Pike> all = queryStore.all();
 		List<Pike> pikes = new ArrayList<>();
 		while(all.hasNext()) {
