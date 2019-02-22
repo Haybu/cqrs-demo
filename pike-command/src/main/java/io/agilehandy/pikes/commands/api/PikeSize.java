@@ -22,9 +22,9 @@ package io.agilehandy.pikes.commands.api;
  **/
 public enum PikeSize {
 
-	SMALL ("small"),
-	MEDIUM ("medium"),
-	LARGE ("large");
+	SMALL ("SMALL"),
+	MEDIUM ("MEDIUM"),
+	LARGE ("LARGE");
 
 	private String value;
 

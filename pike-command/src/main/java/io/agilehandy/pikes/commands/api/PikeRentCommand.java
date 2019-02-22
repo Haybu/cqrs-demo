@@ -27,13 +27,11 @@ import java.time.LocalDate;
 @Value
 public class PikeRentCommand extends PikeBaseCommand {
 
-	private String location;
 	private LocalDate startTime;
 	private String rentedBy;
 
 	public PikeRentCommand(String subjectId, String location, String rentedBy) {
 		super(subjectId);
-		this.location = location;
 		this.startTime = LocalDate.now();
 		this.rentedBy = rentedBy;
 	}

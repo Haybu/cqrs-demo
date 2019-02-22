@@ -20,9 +20,7 @@ package io.agilehandy.pikes.commands.api;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import javaslang.API;
 import javaslang.Predicates;
@@ -33,6 +31,7 @@ import org.springframework.util.Assert;
 import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -62,11 +61,11 @@ public class Pike {
 
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	private LocalDate rentStartTime;
+	private LocalDateTime rentStartTime;
 
-	@JsonSerialize(using = LocalDateSerializer.class)
-	@JsonDeserialize(using = LocalDateDeserializer.class)
-	private LocalDate rentEndTime;
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	private LocalDateTime rentEndTime;
 
 	private String rentedBy;
 
@@ -91,7 +90,7 @@ public class Pike {
 		PikeEvent event =
 				new PikeEvent(UUID.randomUUID().toString()
 						, PikeEventType.PIKE_CREATED
-						, LocalDate.now(), metadata);
+						, LocalDate.now().atStartOfDay(), metadata);
 
 		pikeCreated(event);
 
@@ -114,17 +113,15 @@ public class Pike {
 	}
 
 	public boolean rent(PikeRentCommand pikeRentCommand) {
-		Assert.notNull(pikeRentCommand.getLocation(), "Rent location should be set");
 		Assert.notNull(pikeRentCommand.getRentedBy(), "Renter ID should be set");
 
 		Map<String, Object> metadata = new HashMap<>();
-		metadata.put("location", pikeRentCommand.getLocation());
 		metadata.put("rentedBy", pikeRentCommand.getRentedBy());
 
 		PikeEvent event =
 				new PikeEvent(this.getId()
 						, PikeEventType.PIKE_RENTED
-						, LocalDate.now(), metadata);
+						, LocalDate.now().atStartOfDay(), metadata);
 
 		pikeRented(event);
 		return true;
@@ -136,7 +133,6 @@ public class Pike {
 		}
 		log.info("event source: {}", event.getEventType().getValue());
 		this.availability = false;
-		this.location = (String)event.getEventMetadata().get("location");
 		this.rentedBy = (String)event.getEventMetadata().get("rentedBy");
 		this.rentStartTime = event.getEventDate();
 		this.addEvent(event);
@@ -152,7 +148,7 @@ public class Pike {
 		PikeEvent event =
 				new PikeEvent(this.getId()
 						, PikeEventType.PIKE_RETURNED
-						, LocalDate.now(), metadata);
+						, LocalDate.now().atStartOfDay(), metadata);
 		
 		pikeReturned(event);
 		return true;
@@ -163,10 +159,10 @@ public class Pike {
 			return this;
 		}
 		log.info("event source: {}", event.getEventType().getValue());
-		this.availability = false;
+		this.availability = true;
 		this.location = (String)event.getEventMetadata().get("location");
 		Duration between = Duration.between(this.rentStartTime, event.getEventDate());
-		Double charge = this.ratePerHour * (between.getSeconds()/60 * 60);
+		Double charge = this.ratePerHour * (between.getSeconds() / 3600);  // pretend per nano = hour, so we can run this quick :)
 		DecimalFormat df = new DecimalFormat("#.00");
 		this.rentCost = Double.valueOf(df.format(charge));
 		this.addEvent(event);

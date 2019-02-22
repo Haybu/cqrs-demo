@@ -20,6 +20,7 @@ package io.agilehandy.pikes.commands.api;
 import lombok.Value;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * @author Haytham Mohamed
@@ -27,12 +28,12 @@ import java.time.LocalDate;
 @Value
 public class PikeReturnCommand extends PikeBaseCommand {
 
-	private final LocalDate endDate;
+	private final LocalDateTime endDate;
 	private final String location;
 
 	public PikeReturnCommand(String subjectId, String location) {
 		super(subjectId);
-		this.endDate = LocalDate.now();
+		this.endDate = LocalDate.now().atStartOfDay();
 		this.location = location;
 	}
 }
