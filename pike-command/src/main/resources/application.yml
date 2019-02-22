@@ -1,0 +1,30 @@
+server:
+  servlet:
+    context-path: /pikes/command
+
+spring:
+  application:
+    name: pike_cqrs_read
+  cloud:
+    stream:
+      bindings:
+        output:
+          destination: pike-events
+          producer.header-mode: headers
+          contentType: application/json
+        input:
+          destination: pike-events
+          consumer.header-mode: headers
+          contentType: application/json
+          group: pike-events
+      kafka:
+        streams:
+          binder:
+            configuration:
+              commit.interval.ms: 1000
+              default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+              default.value.serde: org.apache.kafka.common.serialization.Serdes$BytesSerde
+
+
+
+

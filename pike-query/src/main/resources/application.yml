@@ -1,0 +1,20 @@
+server:
+  servlet:
+    context-path: /pikes/read
+
+spring:
+  cloud:
+    stream:
+      bindings:
+        eventsIn:
+          destination: pike-events
+          consumer.header-mode: raw
+          group: pike-events
+          content-type: application/json
+      kafka:
+        streams:
+          binder:
+            configuration:
+              commit.interval.ms: 1000
+              default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+              default.value.serde: org.apache.kafka.common.serialization.Serdes$serdeFrom(PikeEvent.class)
