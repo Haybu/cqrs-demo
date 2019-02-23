@@ -19,7 +19,6 @@ package io.agilehandy.pikes.commands.api;
 
 import lombok.Value;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -33,7 +32,7 @@ public class PikeReturnCommand extends PikeBaseCommand {
 
 	public PikeReturnCommand(String subjectId, String location) {
 		super(subjectId);
-		this.endDate = LocalDate.now().atStartOfDay();
+		this.endDate = LocalDateTime.now();
 		this.location = location;
 	}
 }

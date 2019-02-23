@@ -30,7 +30,6 @@ import org.springframework.util.Assert;
 
 import java.text.DecimalFormat;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,7 +68,7 @@ public class Pike {
 
 	private String rentedBy;
 
-	private Double ratePerHour;
+	private Double rate;
 
 	private Double rentCost;
 
@@ -77,12 +76,12 @@ public class Pike {
 
 	public Pike(PikeCreateCommand pikeCreateCommand) {
 		Assert.notNull(pikeCreateCommand.getSize(), "Pike size should not be null");
-		Assert.notNull(pikeCreateCommand.getRatePerHour(), "Pike rent ratre should assigned");
+		Assert.notNull(pikeCreateCommand.getRate(), "Pike rent rate should assigned");
 		Assert.notNull(pikeCreateCommand.getLocation(), "Pike location should not be null");
 
 		Map<String, Object> metadata = new HashMap<>();
 		metadata.put("location", pikeCreateCommand.getLocation());
-		metadata.put("ratePerHour", pikeCreateCommand.getRatePerHour());
+		metadata.put("rate", pikeCreateCommand.getRate());
 		metadata.put("size", pikeCreateCommand.getSize().getValue());
 
 		log.info("About to send create pike event..");
@@ -90,7 +89,7 @@ public class Pike {
 		PikeEvent event =
 				new PikeEvent(UUID.randomUUID().toString()
 						, PikeEventType.PIKE_CREATED
-						, LocalDate.now().atStartOfDay(), metadata);
+						, LocalDateTime.now(), metadata);
 
 		pikeCreated(event);
 
@@ -105,7 +104,7 @@ public class Pike {
 		this.id = event.getEventSubject();
 		this.availability = true;
 		this.location = (String) event.getEventMetadata().get("location");
-		this.ratePerHour = (Double) event.getEventMetadata().get("ratePerHour");
+		this.rate = (Double) event.getEventMetadata().get("rate");
 		this.size = (String) event.getEventMetadata().get("size");
 		this.rentCost = 0d;
 		this.addEvent(event);
@@ -121,7 +120,7 @@ public class Pike {
 		PikeEvent event =
 				new PikeEvent(this.getId()
 						, PikeEventType.PIKE_RENTED
-						, LocalDate.now().atStartOfDay(), metadata);
+						, LocalDateTime.now(), metadata);
 
 		pikeRented(event);
 		return true;
@@ -148,7 +147,7 @@ public class Pike {
 		PikeEvent event =
 				new PikeEvent(this.getId()
 						, PikeEventType.PIKE_RETURNED
-						, LocalDate.now().atStartOfDay(), metadata);
+						, LocalDateTime.now(), metadata);
 		
 		pikeReturned(event);
 		return true;
@@ -162,7 +161,7 @@ public class Pike {
 		this.availability = true;
 		this.location = (String)event.getEventMetadata().get("location");
 		Duration between = Duration.between(this.rentStartTime, event.getEventDate());
-		Double charge = this.ratePerHour * (between.getSeconds() / 3600);  // pretend per nano = hour, so we can run this quick :)
+		Double charge = this.rate * between.getSeconds();
 		DecimalFormat df = new DecimalFormat("#.00");
 		this.rentCost = Double.valueOf(df.format(charge));
 		this.addEvent(event);

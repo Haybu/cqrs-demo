@@ -26,13 +26,13 @@ import lombok.Value;
 public class PikeCreateCommand extends PikeBaseCommand {
 
 	private String location;
-	private Double ratePerHour;
+	private Double rate;
 	private PikeSize size;
 
 	public PikeCreateCommand(String id, String location
-			, Double ratePerHour, PikeSize size){
+			, Double rate, PikeSize size){
 		super(id);
-		this.ratePerHour = ratePerHour;
+		this.rate = rate;
 		this.location = location;
 		this.size = size;
 	}

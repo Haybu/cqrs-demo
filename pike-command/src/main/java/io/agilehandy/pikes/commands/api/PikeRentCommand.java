@@ -19,7 +19,7 @@ package io.agilehandy.pikes.commands.api;
 
 import lombok.Value;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * @author Haytham Mohamed
@@ -27,12 +27,12 @@ import java.time.LocalDate;
 @Value
 public class PikeRentCommand extends PikeBaseCommand {
 
-	private LocalDate startTime;
+	private LocalDateTime startTime;
 	private String rentedBy;
 
 	public PikeRentCommand(String subjectId, String location, String rentedBy) {
 		super(subjectId);
-		this.startTime = LocalDate.now();
+		this.startTime = LocalDateTime.now();
 		this.rentedBy = rentedBy;
 	}
 }
