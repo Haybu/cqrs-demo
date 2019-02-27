@@ -15,19 +15,24 @@
  */
 
 
-package io.agilehandy.pikes;
+package io.agilehandy.common.api;
 
-import io.agilehandy.pikes.events.PikeEvent;
-import org.apache.kafka.streams.kstream.KStream;
-import org.springframework.cloud.stream.annotation.Input;
+import lombok.Value;
+
+import java.time.LocalDateTime;
 
 /**
  * @author Haytham Mohamed
  **/
-public interface PikeEventsBinding {
+@Value
+public class PikeRentCommand extends PikeBaseCommand {
 
-	String PIKE_EVENT_IN = "eventsIn";
+	private LocalDateTime startTime;
+	private String rentedBy;
 
-	@Input(PIKE_EVENT_IN)
-	KStream<String, PikeEvent> pikeEventIn();
+	public PikeRentCommand(String subjectId, String location, String rentedBy) {
+		super(subjectId);
+		this.startTime = LocalDateTime.now();
+		this.rentedBy = rentedBy;
+	}
 }

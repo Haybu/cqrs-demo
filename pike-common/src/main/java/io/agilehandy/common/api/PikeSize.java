@@ -15,7 +15,24 @@
  */
 
 
-package io.agilehandy.pikes.query.summary;
+package io.agilehandy.common.api;
 
-public interface PikesSummaryRepository {
+/**
+ * @author Haytham Mohamed
+ **/
+public enum PikeSize {
+
+	SMALL ("SMALL"),
+	MEDIUM ("MEDIUM"),
+	LARGE ("LARGE");
+
+	private String value;
+
+	private PikeSize(String val) {
+		this.value = val;
+	}
+
+	public String getValue() {
+		return this.value;
+	}
 }

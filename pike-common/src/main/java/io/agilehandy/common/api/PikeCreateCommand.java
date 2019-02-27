@@ -15,24 +15,26 @@
  */
 
 
-package io.agilehandy.pikes.commands.api;
+package io.agilehandy.common.api;
+
+import lombok.Value;
 
 /**
  * @author Haytham Mohamed
  **/
-public enum PikeSize {
+@Value
+public class PikeCreateCommand extends PikeBaseCommand {
 
-	SMALL ("SMALL"),
-	MEDIUM ("MEDIUM"),
-	LARGE ("LARGE");
+	private String location;
+	private Double rate;
+	private PikeSize size;
 
-	private String value;
-
-	private PikeSize(String val) {
-		this.value = val;
+	public PikeCreateCommand(String id, String location
+			, Double rate, PikeSize size){
+		super(id);
+		this.rate = rate;
+		this.location = location;
+		this.size = size;
 	}
 
-	public String getValue() {
-		return this.value;
-	}
 }

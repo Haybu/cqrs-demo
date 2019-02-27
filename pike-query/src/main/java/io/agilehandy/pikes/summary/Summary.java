@@ -15,28 +15,29 @@
  */
 
 
-package io.agilehandy.pikes.commands.api;
+package io.agilehandy.pikes.summary;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 /**
  * @author Haytham Mohamed
  **/
-public enum PikeEventType {
 
-	PIKE_CREATED ("PIKE_CREATED"),
-	PIKE_RENTED ("PIKE_RENTED"),
-	PIKE_RETURNED ("PIKE_RETURNED")
-	;
+@Entity
+@NoArgsConstructor
+@ToString
+@Data
+public class Summary {
 
-	private String value;
+	@Id
+	String pikeId;
 
-	private PikeEventType(String value)
-	{
-		this.value = value;
-	}
+	Integer numberOfRents;
 
-	public String getValue()
-	{
-		return this.value;
-	}
-
+	Double totalRevenue;
 }

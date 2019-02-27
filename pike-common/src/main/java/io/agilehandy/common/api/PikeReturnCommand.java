@@ -15,21 +15,24 @@
  */
 
 
-package io.agilehandy.pikes.pubsub;
+package io.agilehandy.common.api;
 
-import org.apache.kafka.streams.kstream.KStream;
-import org.springframework.cloud.stream.annotation.Input;
-import org.springframework.cloud.stream.annotation.Output;
-import org.springframework.messaging.MessageChannel;
+import lombok.Value;
 
-public interface PikeEventChannels {
+import java.time.LocalDateTime;
 
-	String PIKE_EVENTS_OUT = "output";
-	String PIKE_EVENTS_IN = "input";
+/**
+ * @author Haytham Mohamed
+ **/
+@Value
+public class PikeReturnCommand extends PikeBaseCommand {
 
-	@Output(PIKE_EVENTS_OUT)
-	MessageChannel output();
+	private final LocalDateTime endDate;
+	private final String location;
 
-	@Input(PIKE_EVENTS_IN)
-	KStream<?, ?> input();
+	public PikeReturnCommand(String subjectId, String location) {
+		super(subjectId);
+		this.endDate = LocalDateTime.now();
+		this.location = location;
+	}
 }

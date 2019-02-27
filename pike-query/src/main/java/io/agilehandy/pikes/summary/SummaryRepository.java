@@ -15,11 +15,9 @@
  */
 
 
-package io.agilehandy.pikes.query.summary;
+package io.agilehandy.pikes.summary;
 
-/**
- * @author Haytham Mohamed
- **/
+import org.springframework.data.repository.CrudRepository;
 
-public class PikesSummary {
+public interface SummaryRepository extends CrudRepository<Summary, String> {
 }

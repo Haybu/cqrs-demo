@@ -15,12 +15,11 @@
  */
 
 
-package io.agilehandy.pikes.commands.impl;
+package io.agilehandy.pikes.commands;
 
-import io.agilehandy.pikes.commands.api.Pike;
-import io.agilehandy.pikes.commands.api.PikeCreateCommand;
-import io.agilehandy.pikes.commands.api.PikeRentCommand;
-import io.agilehandy.pikes.commands.api.PikeReturnCommand;
+import io.agilehandy.common.api.PikeCreateCommand;
+import io.agilehandy.common.api.PikeRentCommand;
+import io.agilehandy.common.api.PikeReturnCommand;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

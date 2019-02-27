@@ -15,13 +15,18 @@
  */
 
 
-package io.agilehandy.pikes.commands.api;
+package io.agilehandy.pikes.commands;
 
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import io.agilehandy.common.api.PikeCreateCommand;
+import io.agilehandy.common.api.PikeEvent;
+import io.agilehandy.common.api.PikeEventType;
+import io.agilehandy.common.api.PikeRentCommand;
+import io.agilehandy.common.api.PikeReturnCommand;
 import javaslang.API;
 import javaslang.Predicates;
 import lombok.Data;

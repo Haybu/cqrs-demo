@@ -15,24 +15,28 @@
  */
 
 
-package io.agilehandy.pikes.commands.api;
-
-import lombok.Value;
-
-import java.time.LocalDateTime;
+package io.agilehandy.common.api;
 
 /**
  * @author Haytham Mohamed
  **/
-@Value
-public class PikeRentCommand extends PikeBaseCommand {
+public enum PikeEventType {
 
-	private LocalDateTime startTime;
-	private String rentedBy;
+	PIKE_CREATED ("PIKE_CREATED"),
+	PIKE_RENTED ("PIKE_RENTED"),
+	PIKE_RETURNED ("PIKE_RETURNED")
+	;
 
-	public PikeRentCommand(String subjectId, String location, String rentedBy) {
-		super(subjectId);
-		this.startTime = LocalDateTime.now();
-		this.rentedBy = rentedBy;
+	private String value;
+
+	private PikeEventType(String value)
+	{
+		this.value = value;
 	}
+
+	public String getValue()
+	{
+		return this.value;
+	}
+
 }

@@ -15,10 +15,21 @@
  */
 
 
-package io.agilehandy.pikes.query.summary;
+package io.agilehandy.pubsub;
 
-/**
- * @author Haytham Mohamed
- **/
-public class PikesSummaryController {
+import org.apache.kafka.streams.kstream.KStream;
+import org.springframework.cloud.stream.annotation.Input;
+import org.springframework.cloud.stream.annotation.Output;
+import org.springframework.messaging.MessageChannel;
+
+public interface PikeEventChannels {
+
+	String PIKE_EVENTS_IN = "input";
+	String PIKE_EVENTS_OUT = "output";
+
+	@Output(PIKE_EVENTS_OUT)
+	MessageChannel output();
+
+	@Input(PIKE_EVENTS_IN)
+	KStream<?, ?> input();
 }

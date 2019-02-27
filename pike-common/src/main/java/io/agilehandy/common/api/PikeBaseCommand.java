@@ -15,25 +15,19 @@
  */
 
 
-package io.agilehandy.pikes.events;
+package io.agilehandy.common.api;
 
-import lombok.Value;
-
-import java.time.LocalDate;
-import java.util.Map;
+import lombok.Data;
 
 /**
  * @author Haytham Mohamed
  **/
-@Value
-public class PikeEvent {
+@Data
+public class PikeBaseCommand {
 
-	private String eventSubject;
+	private String subjectId;
 
-	private PikeEventType eventType;
-
-	private LocalDate eventDate;
-
-	private Map<String, Object> eventMetadata;
-
+	public PikeBaseCommand(String subjectId) {
+		this.subjectId = subjectId;
+	}
 }

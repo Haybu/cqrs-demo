@@ -15,22 +15,12 @@
  */
 
 
-package io.agilehandy.pikes.pubsub;
+package io.agilehandy.pubsub;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.agilehandy.pikes.commands.api.Pike;
-import io.agilehandy.pikes.commands.api.PikeEvent;
+import io.agilehandy.common.api.PikeEvent;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.common.serialization.Serde;
-import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.common.utils.Bytes;
-import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.Materialized;
-import org.apache.kafka.streams.state.KeyValueStore;
 import org.springframework.cloud.stream.annotation.EnableBinding;
-import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.kafka.support.KafkaHeaders;
-import org.springframework.kafka.support.serializer.JsonSerde;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
@@ -45,7 +35,6 @@ public class PikeEventPubSub {
 
 	private final PikeEventChannels channels;
 
-	public static final String EVENTS_SNAPSHOT = "events-snapshots";
 	private final String HEADER_EVENT_TYPE = "event-type";
 
 	public PikeEventPubSub(PikeEventChannels channels) {
@@ -61,23 +50,6 @@ public class PikeEventPubSub {
 		log.info("start publishing create pike event..");
 		channels.output().send(message);
 		log.info("finish publishing create pike event..");
-	}
-
-	// Kafka KTable of aggregate snapshot
-	@StreamListener(PikeEventChannels.PIKE_EVENTS_IN)
-	public void snapshot(KStream<String, PikeEvent> events) {
-		Serde<PikeEvent> pikeEventSerde = new JsonSerde<>( PikeEvent.class, new ObjectMapper() );
-		Serde<Pike> pikeSerde = new JsonSerde<>( Pike.class, new ObjectMapper() );
-
-		events
-				//.groupBy( (s, event) -> event.getEventSubject(),
-						//Serialized.with(Serdes.String(), pikeEventSerde) )
-				.groupByKey()
-				.aggregate(Pike::new, (key, event, pike) -> ((Pike) pike).handleEvent(event),
-						Materialized.<String, Pike, KeyValueStore<Bytes, byte[]>>as(EVENTS_SNAPSHOT)
-								.withKeySerde(Serdes.String())
-								.withValueSerde(pikeSerde)
-						);
 	}
 
 }

@@ -15,7 +15,7 @@
  */
 
 
-package io.agilehandy.pikes.commands.api;
+package io.agilehandy.common.api;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
