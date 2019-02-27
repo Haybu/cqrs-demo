@@ -60,10 +60,11 @@ public class SummaryProjection {
 
 	@StreamListener(target = Sink.INPUT,
 			condition = "headers[HEADER_EVENT_TYPE]=='PIKE_RETURN'")
-	public void returnSummaryrojection(PikeEvent event) {
+	public void returnSummaryProjection(PikeEvent event) {
 		Summary summary = repository.findById(event.getEventSubject()).get();
 		if (summary != null) {
-			//summary.setTotalRentCost(summary.getTotalRentCost() + event.get);
+			summary.setTotalRevenue(summary.getTotalRevenue().doubleValue()
+					+ Double.valueOf((String)event.getEventMetadata().get("cost")).doubleValue());
 			repository.save(summary);
 		}
 	}

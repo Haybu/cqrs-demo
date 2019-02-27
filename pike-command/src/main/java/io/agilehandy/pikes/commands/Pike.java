@@ -146,8 +146,13 @@ public class Pike {
 	public boolean returnPike(PikeReturnCommand pikeReturnCommand) {
 		Assert.notNull(pikeReturnCommand.getLocation(), "Pike location should not be null");
 
+		Duration between = Duration.between(this.rentStartTime, LocalDateTime.now());
+		Double charge = this.rate * between.getSeconds();
+		DecimalFormat df = new DecimalFormat("#.00");
+
 		Map<String, Object> metadata = new HashMap<>();
 		metadata.put("location", pikeReturnCommand.getLocation());
+		metadata.put("cost", df.format(charge));
 
 		PikeEvent event =
 				new PikeEvent(this.getId()
@@ -165,10 +170,7 @@ public class Pike {
 		log.info("event source: {}", event.getEventType().getValue());
 		this.availability = true;
 		this.location = (String)event.getEventMetadata().get("location");
-		Duration between = Duration.between(this.rentStartTime, event.getEventDate());
-		Double charge = this.rate * between.getSeconds();
-		DecimalFormat df = new DecimalFormat("#.00");
-		this.rentCost = Double.valueOf(df.format(charge));
+		this.rentCost = Double.valueOf((String)event.getEventMetadata().get("cost"));
 		this.addEvent(event);
 		return this;
 	}
