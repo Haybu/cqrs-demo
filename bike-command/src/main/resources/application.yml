@@ -27,8 +27,4 @@ spring:
               default.value.serde: org.apache.kafka.common.serialization.Serdes$BytesSerde
         binder:
           brokers: localhost:9092
-          headers: event-type,kafka_messageKey
-
-
-
-
+          headers: event_type,kafka_messageKey

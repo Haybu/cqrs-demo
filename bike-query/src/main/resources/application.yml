@@ -10,10 +10,10 @@ spring:
         input:
           destination: bike-events
           consumer.headerMode: headers
-          group: summary-bike-events-1
+          group: summary-bike-events
           content-type: application/json
       kafka:
         binder:
-          headers: event-type,kafka_messageKey
+          headers: event_type,kafka_messageKey
 
 
