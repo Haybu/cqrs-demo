@@ -38,7 +38,7 @@ public class SummaryController {
 
 	@GetMapping("/summary/{id}")
 	public Summary getOnSummary(@PathVariable String id) {
-		return repository.findById(id).get();
+		return repository.findById(id).orElse(new Summary("-1",0,0d));
 	}
 
 	@GetMapping("/summary")

@@ -45,9 +45,9 @@ public class BikeEventPubSub {
 
 	private final BikeEventChannels channels;
 
-	public static final String EVENTS_SNAPSHOT = "events-snapshots";
+	public static final String EVENTS_SNAPSHOT = "events_snapshots";
 
-	private final String HEADER_EVENT_TYPE = "event-type";
+	private final String HEADER_EVENT_TYPE = "event_type";
 
 	public BikeEventPubSub(BikeEventChannels channels) {
 		this.channels = channels;

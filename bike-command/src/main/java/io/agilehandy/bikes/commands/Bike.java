@@ -58,7 +58,7 @@ public class Bike {
 
 	private String id;
 
-	private String size;
+	private BikeSize size;
 
 	private Boolean availability;
 
@@ -111,7 +111,7 @@ public class Bike {
 		this.availability = true;
 		this.location = (String) event.getEventMetadata().get("location");
 		this.rate = (Double) event.getEventMetadata().get("rate");
-		this.size = (String)event.getEventMetadata().get("size");
+		this.size = BikeSize.fromValue((String)event.getEventMetadata().get("size"));
 		this.rentCost = 0d;
 		this.addEvent(event);
 		return this;

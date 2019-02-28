@@ -9,8 +9,8 @@ spring:
       bindings:
         input:
           destination: bike-events
-          consumer.header-mode: raw
-          group: summary-bike-events-11
+          consumer.headerMode: headers
+          group: summary-bike-events-1
           content-type: application/json
       kafka:
         binder:

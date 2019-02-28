@@ -11,11 +11,11 @@ spring:
       bindings:
         output:
           destination: bike-events
-          producer.header-mode: raw
+          producer.headerMode: headers
           contentType: application/json
         input:
           destination: bike-events
-          consumer.header-mode: raw
+          consumer.headerMode: headers
           contentType: application/json
           group: bike-events-group
       kafka:

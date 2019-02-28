@@ -39,7 +39,7 @@ public enum BikeSize {
 		return this.value;
 	}
 
-	public static BikeSize fromOrdinal(String val) {
+	public static BikeSize fromValue(String val) {
 		return Arrays.asList(allValues)
 				.stream()
 				.filter(v -> v.equals(val))

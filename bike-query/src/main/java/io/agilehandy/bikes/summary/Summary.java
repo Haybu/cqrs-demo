@@ -17,6 +17,7 @@
 
 package io.agilehandy.bikes.summary;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -30,6 +31,7 @@ import javax.persistence.Id;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @Data
 public class Summary {

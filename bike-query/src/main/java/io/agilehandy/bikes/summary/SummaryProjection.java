@@ -45,7 +45,7 @@ public class SummaryProjection {
 		this.repository = repository;
 	}
 
-	@StreamListener(target = Sink.INPUT)
+	/*@StreamListener(target = Sink.INPUT)
 	public void listenToAll(@Payload BikeEvent event,
 	                        @Headers Map<?,?> headers) {
 		log.info("Summary projected from event {} : ", event);
@@ -53,10 +53,10 @@ public class SummaryProjection {
 				.map(e -> e.getValue()).findFirst()
 				.get().toString();
 		log.info("One header value is {} ", first);
-	}
+	}*/
 
 	@StreamListener(target = Sink.INPUT,
-			condition = "headers['event-type']=='BIKE_CREATED'")
+			condition = "headers['event_type']=='BIKE_CREATED'")
 	public void createSummaryProjection(@Payload BikeEvent event) {
 		log.info("Summary projected from bike created event");
 		Summary summary = new Summary();
@@ -67,7 +67,7 @@ public class SummaryProjection {
 	}
 
 	@StreamListener(target = Sink.INPUT,
-			condition = "headers['event-type']=='BIKE_RENTED'")
+			condition = "headers['event_type']=='BIKE_RENTED'")
 	public void rentSummaryProjection(@Payload BikeEvent event) {
 		log.info("Summary projected from bike rented event");
 		Summary summary = repository.findById(event.getEventSubject()).get();
