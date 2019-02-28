@@ -22,9 +22,9 @@ package io.agilehandy.common.api;
  **/
 public enum BikeEventType {
 
-	PIKE_CREATED ("PIKE_CREATED"),
-	PIKE_RENTED ("PIKE_RENTED"),
-	PIKE_RETURNED ("PIKE_RETURNED")
+	BIKE_CREATED ("BIKE_CREATED"),
+	BIKE_RENTED ("BIKE_RENTED"),
+	BIKE_RETURNED ("BIKE_RETURNED")
 	;
 
 	private String value;

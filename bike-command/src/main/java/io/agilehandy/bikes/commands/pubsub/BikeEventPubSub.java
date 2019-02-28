@@ -57,7 +57,7 @@ public class BikeEventPubSub {
 		Message<BikeEvent> message = MessageBuilder
 				.withPayload(event)
 				.setHeader(KafkaHeaders.MESSAGE_KEY, event.getEventSubject().getBytes())
-				.setHeader(HEADER_EVENT_TYPE, event.getEventType().getValue().getBytes())
+				.setHeader(HEADER_EVENT_TYPE, event.getEventType().getValue())
 				.build();
 		log.info("start publishing create pike event..");
 		channels.output().send(message);

@@ -1,19 +1,19 @@
-
 server:
   servlet:
-    context-path: /gateway
+    context-path: /bike
+  port: 8080
 
 spring:
   gateway:
     routes:
-      - id: host_route_1
-        uri: lb://service1/read
+      - id: route_1
+        uri: lb://localhost:8081/bike
         predicates:
-          - Path=/r
-      - id: host_route_2
-        uri: lb://yourserver2/write
+          - Path=/command
+      - id: route_2
+        uri: lb://localhost:8082/bike
         predicates:
-          - Path=/w
+          - Path=/query
   application:
     name: oocl-service
 

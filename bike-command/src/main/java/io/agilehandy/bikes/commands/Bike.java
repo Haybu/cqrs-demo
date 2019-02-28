@@ -27,6 +27,7 @@ import io.agilehandy.common.api.BikeEvent;
 import io.agilehandy.common.api.BikeEventType;
 import io.agilehandy.common.api.BikeRentCommand;
 import io.agilehandy.common.api.BikeReturnCommand;
+import io.agilehandy.common.api.BikeSize;
 import javaslang.API;
 import javaslang.Predicates;
 import lombok.Data;
@@ -93,7 +94,7 @@ public class Bike {
 
 		BikeEvent event =
 				new BikeEvent(UUID.randomUUID().toString()
-						, BikeEventType.PIKE_CREATED
+						, BikeEventType.BIKE_CREATED
 						, LocalDateTime.now(), metadata);
 
 		pikeCreated(event);
@@ -102,7 +103,7 @@ public class Bike {
 	}
 
 	public Bike pikeCreated(BikeEvent event) {
-		if (event.getEventType() != BikeEventType.PIKE_CREATED) {
+		if (event.getEventType() != BikeEventType.BIKE_CREATED) {
 			return this;
 		}
 		log.info("event source: {}", event.getEventType().getValue());
@@ -110,7 +111,7 @@ public class Bike {
 		this.availability = true;
 		this.location = (String) event.getEventMetadata().get("location");
 		this.rate = (Double) event.getEventMetadata().get("rate");
-		this.size = (String) event.getEventMetadata().get("size");
+		this.size = (String)event.getEventMetadata().get("size");
 		this.rentCost = 0d;
 		this.addEvent(event);
 		return this;
@@ -124,7 +125,7 @@ public class Bike {
 
 		BikeEvent event =
 				new BikeEvent(this.getId()
-						, BikeEventType.PIKE_RENTED
+						, BikeEventType.BIKE_RENTED
 						, LocalDateTime.now(), metadata);
 
 		pikeRented(event);
@@ -132,7 +133,7 @@ public class Bike {
 	}
 
 	private Bike pikeRented(BikeEvent event) {
-		if (event.getEventType() != BikeEventType.PIKE_RENTED) {
+		if (event.getEventType() != BikeEventType.BIKE_RENTED) {
 			return this;
 		}
 		log.info("event source: {}", event.getEventType().getValue());
@@ -156,7 +157,7 @@ public class Bike {
 
 		BikeEvent event =
 				new BikeEvent(this.getId()
-						, BikeEventType.PIKE_RETURNED
+						, BikeEventType.BIKE_RETURNED
 						, LocalDateTime.now(), metadata);
 		
 		pikeReturned(event);
@@ -164,7 +165,7 @@ public class Bike {
 	}
 
 	private Bike pikeReturned(BikeEvent event) {
-		if (event.getEventType() != BikeEventType.PIKE_RETURNED) {
+		if (event.getEventType() != BikeEventType.BIKE_RETURNED) {
 			return this;
 		}
 		log.info("event source: {}", event.getEventType().getValue());
@@ -198,9 +199,9 @@ public class Bike {
 
 	public Bike handleEvent(BikeEvent event) {
 		return API.Match(event.getEventType()).of(
-				Case(Predicates.is(BikeEventType.PIKE_CREATED), this.pikeCreated(event)),
-				Case(Predicates.is(BikeEventType.PIKE_RENTED), this.pikeRented(event)),
-				Case(Predicates.is(BikeEventType.PIKE_RETURNED), this.pikeReturned(event))
+				Case(Predicates.is(BikeEventType.BIKE_CREATED), this.pikeCreated(event)),
+				Case(Predicates.is(BikeEventType.BIKE_RENTED), this.pikeRented(event)),
+				Case(Predicates.is(BikeEventType.BIKE_RETURNED), this.pikeReturned(event))
 		);
 	}
 

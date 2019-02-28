@@ -18,16 +18,24 @@
 package io.agilehandy.bikes.summary;
 
 import io.agilehandy.common.api.BikeEvent;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.cloud.stream.messaging.Sink;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Headers;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author Haytham Mohamed
  **/
 @Component
 @EnableBinding(Sink.class)
+@Slf4j
 public class SummaryProjection {
 
 	private final String HEADER_EVENT_TYPE = "event-type";
@@ -37,10 +45,20 @@ public class SummaryProjection {
 		this.repository = repository;
 	}
 
+	@StreamListener(target = Sink.INPUT)
+	public void listenToAll(@Payload BikeEvent event,
+	                        @Headers Map<?,?> headers) {
+		log.info("Summary projected from event {} : ", event);
+		String first = headers.entrySet().stream()
+				.map(e -> e.getValue()).findFirst()
+				.get().toString();
+		log.info("One header value is {} ", first);
+	}
 
 	@StreamListener(target = Sink.INPUT,
-			condition = "headers[HEADER_EVENT_TYPE]=='PIKE_CREATED'")
-	public void createSummaryProjection(BikeEvent event) {
+			condition = "headers['event-type']=='BIKE_CREATED'")
+	public void createSummaryProjection(@Payload BikeEvent event) {
+		log.info("Summary projected from bike created event");
 		Summary summary = new Summary();
 		summary.setPikeId(event.getEventSubject());
 		summary.setNumberOfRents(0);
@@ -49,8 +67,9 @@ public class SummaryProjection {
 	}
 
 	@StreamListener(target = Sink.INPUT,
-			condition = "headers[HEADER_EVENT_TYPE]=='PIKE_RENT'")
-	public void rentSummaryProjection(BikeEvent event) {
+			condition = "headers['event-type']=='BIKE_RENTED'")
+	public void rentSummaryProjection(@Payload BikeEvent event) {
+		log.info("Summary projected from bike rented event");
 		Summary summary = repository.findById(event.getEventSubject()).get();
 		if (summary != null) {
 			summary.setNumberOfRents(summary.getNumberOfRents() + 1);
@@ -59,8 +78,9 @@ public class SummaryProjection {
 	}
 
 	@StreamListener(target = Sink.INPUT,
-			condition = "headers[HEADER_EVENT_TYPE]=='PIKE_RETURN'")
-	public void returnSummaryProjection(BikeEvent event) {
+			condition = "headers['event-type']=='BIKE_RETURNED'")
+	public void returnSummaryProjection(@Payload BikeEvent event) {
+		log.info("Summary projected from bike returned event");
 		Summary summary = repository.findById(event.getEventSubject()).get();
 		if (summary != null) {
 			summary.setTotalRevenue(summary.getTotalRevenue().doubleValue()

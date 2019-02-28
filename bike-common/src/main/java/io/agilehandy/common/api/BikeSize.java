@@ -17,6 +17,8 @@
 
 package io.agilehandy.common.api;
 
+import java.util.Arrays;
+
 /**
  * @author Haytham Mohamed
  **/
@@ -27,6 +29,7 @@ public enum BikeSize {
 	LARGE ("LARGE");
 
 	private String value;
+	private static BikeSize[] allValues = values();
 
 	private BikeSize(String val) {
 		this.value = val;
@@ -34,5 +37,13 @@ public enum BikeSize {
 
 	public String getValue() {
 		return this.value;
+	}
+
+	public static BikeSize fromOrdinal(String val) {
+		return Arrays.asList(allValues)
+				.stream()
+				.filter(v -> v.equals(val))
+				.findFirst()
+				.orElseGet(() -> SMALL);
 	}
 }
