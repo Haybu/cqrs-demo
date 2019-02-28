@@ -1,0 +1,20 @@
+
+server:
+  servlet:
+    context-path: /gateway
+
+spring:
+  gateway:
+    routes:
+      - id: host_route_1
+        uri: lb://service1/read
+        predicates:
+          - Path=/r
+      - id: host_route_2
+        uri: lb://yourserver2/write
+        predicates:
+          - Path=/w
+  application:
+    name: oocl-service
+
+

@@ -1,0 +1,32 @@
+server:
+  servlet:
+    context-path: /bikes/command
+
+spring:
+  application:
+    name: pike_cqrs_read
+  cloud:
+    stream:
+      bindings:
+        output:
+          destination: bike-events
+          producer.header-mode: raw
+          contentType: application/json
+        input:
+          destination: bike-events
+          consumer.header-mode: raw
+          contentType: application/json
+          group: bike-events-group
+      kafka:
+        streams:
+          binder:
+            configuration:
+              commit.interval.ms: 1000
+              default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+              default.value.serde: org.apache.kafka.common.serialization.Serdes$BytesSerde
+        binder:
+          brokers: localhost:9092
+
+
+
+

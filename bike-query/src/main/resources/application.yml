@@ -1,0 +1,14 @@
+server:
+  servlet:
+    context-path: /bikes/read
+
+spring:
+  cloud:
+    stream:
+      bindings:
+        input:
+          destination: pike-events
+          consumer.header-mode: raw
+          group: pike-events
+          content-type: application/json
+

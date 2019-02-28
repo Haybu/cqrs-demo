@@ -77,19 +77,11 @@
 	</pluginRepositories>
 
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
-
 	<modules>
-		<module>pike-command</module>
-		<module>pike-query</module>
-		<module>pike-gateway</module>
+		<module>bike-common</module>
+		<module>bike-command</module>
+		<module>bike-query</module>
+		<module>bike-gateway</module>
 	</modules>
 
 </project>
