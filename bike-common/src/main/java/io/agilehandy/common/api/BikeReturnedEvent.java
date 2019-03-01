@@ -17,22 +17,31 @@
 
 package io.agilehandy.common.api;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 /**
  * @author Haytham Mohamed
  **/
-@Value
-public class BikeRentCommand extends BikeBaseCommand {
+@Data
+public class BikeReturnedEvent extends BikeBaseEvent implements BikeEvent {
 
-	private LocalDateTime startTime;
-	private String rentedBy;
+	private LocalDateTime endDate;
+	private String location;
+	private Double cost;
 
-	public BikeRentCommand(String subjectId, String rentedBy) {
-		super(subjectId);
-		this.startTime = LocalDateTime.now();
-		this.rentedBy = rentedBy;
+	public BikeReturnedEvent() { }
+
+	public BikeReturnedEvent(String id, String location, Double cost
+			,LocalDateTime eventDate, Map<String, Object> metadata) {
+		super(id, BikeEventTypes.BIKE_RENTED, eventDate, metadata);
+		this.location = location;
+		this.endDate = eventDate;
+		this.cost = cost;
 	}
+
 }

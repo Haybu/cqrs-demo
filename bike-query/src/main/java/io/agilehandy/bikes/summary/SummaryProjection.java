@@ -17,18 +17,13 @@
 
 package io.agilehandy.bikes.summary;
 
-import io.agilehandy.common.api.BikeEvent;
+import io.agilehandy.common.api.BikeBaseEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.cloud.stream.messaging.Sink;
-import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * @author Haytham Mohamed
@@ -57,7 +52,7 @@ public class SummaryProjection {
 
 	@StreamListener(target = Sink.INPUT,
 			condition = "headers['event_type']=='BIKE_CREATED'")
-	public void createSummaryProjection(@Payload BikeEvent event) {
+	public void createSummaryProjection(@Payload BikeBaseEvent event) {
 		log.info("Summary projected from bike created event");
 		Summary summary = new Summary();
 		summary.setPikeId(event.getEventSubject());
@@ -68,7 +63,7 @@ public class SummaryProjection {
 
 	@StreamListener(target = Sink.INPUT,
 			condition = "headers['event_type']=='BIKE_RENTED'")
-	public void rentSummaryProjection(@Payload BikeEvent event) {
+	public void rentSummaryProjection(@Payload BikeBaseEvent event) {
 		log.info("Summary projected from bike rented event");
 		Summary summary = repository.findById(event.getEventSubject()).get();
 		if (summary != null) {
@@ -79,7 +74,7 @@ public class SummaryProjection {
 
 	@StreamListener(target = Sink.INPUT,
 			condition = "headers['event-type']=='BIKE_RETURNED'")
-	public void returnSummaryProjection(@Payload BikeEvent event) {
+	public void returnSummaryProjection(@Payload BikeBaseEvent event) {
 		log.info("Summary projected from bike returned event");
 		Summary summary = repository.findById(event.getEventSubject()).get();
 		if (summary != null) {

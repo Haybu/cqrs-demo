@@ -17,26 +17,9 @@
 
 package io.agilehandy.common.api;
 
-/**
- * @author Haytham Mohamed
- **/
-public enum BikeEventType {
+public interface BikeEventTypes {
 
-	BIKE_CREATED ("BIKE_CREATED"),
-	BIKE_RENTED ("BIKE_RENTED"),
-	BIKE_RETURNED ("BIKE_RETURNED")
-	;
-
-	private String value;
-
-	private BikeEventType(String value)
-	{
-		this.value = value;
-	}
-
-	public String getValue()
-	{
-		return this.value;
-	}
-
+	public final static String BIKE_CREATED = "BIKE_CREATED";
+	public final static String BIKE_RENTED = "BIKE_RENTED";
+	public final static String BIKE_RETURNED = "BIKE_RETURNED";
 }

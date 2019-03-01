@@ -27,8 +27,8 @@ import java.time.LocalDateTime;
 @Value
 public class BikeReturnCommand extends BikeBaseCommand {
 
-	private final LocalDateTime endDate;
-	private final String location;
+	private LocalDateTime endDate;
+	private String location;
 
 	public BikeReturnCommand(String subjectId, String location) {
 		super(subjectId);

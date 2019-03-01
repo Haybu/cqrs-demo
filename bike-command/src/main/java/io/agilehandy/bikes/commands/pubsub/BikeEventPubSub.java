@@ -18,8 +18,9 @@
 package io.agilehandy.bikes.commands.pubsub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.agilehandy.common.api.BikeEvent;
 import io.agilehandy.bikes.commands.Bike;
+import io.agilehandy.common.api.BikeBaseEvent;
+import io.agilehandy.common.api.BikeEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
@@ -53,11 +54,11 @@ public class BikeEventPubSub {
 		this.channels = channels;
 	}
 
-	public void publish(BikeEvent event) {
-		Message<BikeEvent> message = MessageBuilder
+	public void publish(BikeBaseEvent event) {
+		Message<BikeBaseEvent> message = MessageBuilder
 				.withPayload(event)
 				.setHeader(KafkaHeaders.MESSAGE_KEY, event.getEventSubject().getBytes())
-				.setHeader(HEADER_EVENT_TYPE, event.getEventType().getValue())
+				.setHeader(HEADER_EVENT_TYPE, event.getEventType())
 				.build();
 		log.info("start publishing create pike event..");
 		channels.output().send(message);

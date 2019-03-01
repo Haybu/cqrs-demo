@@ -22,12 +22,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import io.agilehandy.common.api.BikeCreateCommand;
-import io.agilehandy.common.api.BikeEvent;
-import io.agilehandy.common.api.BikeEventType;
-import io.agilehandy.common.api.BikeRentCommand;
-import io.agilehandy.common.api.BikeReturnCommand;
-import io.agilehandy.common.api.BikeSize;
+import io.agilehandy.common.api.*;
 import javaslang.API;
 import javaslang.Predicates;
 import lombok.Data;
@@ -41,7 +36,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import static javaslang.API.*;
@@ -54,7 +48,7 @@ import static javaslang.API.*;
 @Slf4j
 public class Bike {
 
-	private List<BikeEvent> events = new ArrayList<>();
+	private List<BikeBaseEvent> events = new ArrayList<>();
 
 	private String id;
 
@@ -80,103 +74,82 @@ public class Bike {
 
 	public Bike() {}
 
-	public Bike(BikeCreateCommand pikeCreateCommand) {
-		Assert.notNull(pikeCreateCommand.getSize(), "Pike size should not be null");
-		Assert.notNull(pikeCreateCommand.getRate(), "Pike rent rate should assigned");
-		Assert.notNull(pikeCreateCommand.getLocation(), "Pike location should not be null");
+	public Bike(BikeCreateCommand cmd) {
+		Assert.notNull(cmd.getSize(), "Pike size should not be null");
+		Assert.notNull(cmd.getRate(), "Pike rent rate should assigned");
+		Assert.notNull(cmd.getLocation(), "Pike location should not be null");
 
-		Map<String, Object> metadata = new HashMap<>();
-		metadata.put("location", pikeCreateCommand.getLocation());
-		metadata.put("rate", pikeCreateCommand.getRate());
-		metadata.put("size", pikeCreateCommand.getSize().getValue());
-
-		log.info("About to send create pike event..");
-
-		BikeEvent event =
-				new BikeEvent(UUID.randomUUID().toString()
-						, BikeEventType.BIKE_CREATED
-						, LocalDateTime.now(), metadata);
+		BikeCreatedEvent event =
+				new BikeCreatedEvent(
+						UUID.randomUUID().toString(),
+						cmd.getLocation(),
+						cmd.getRate(),
+						cmd.getSize().getValue(),
+						LocalDateTime.now(), new HashMap<>());
 
 		pikeCreated(event);
-
-		log.info("sent PikeCreatedEvent");
 	}
 
-	public Bike pikeCreated(BikeEvent event) {
-		if (event.getEventType() != BikeEventType.BIKE_CREATED) {
-			return this;
-		}
-		log.info("event source: {}", event.getEventType().getValue());
+	public Bike pikeCreated(BikeCreatedEvent event) {
+		log.info("event sourced: {}", event.getEventType());
 		this.id = event.getEventSubject();
 		this.availability = true;
-		this.location = (String) event.getEventMetadata().get("location");
-		this.rate = (Double) event.getEventMetadata().get("rate");
-		this.size = BikeSize.fromValue((String)event.getEventMetadata().get("size"));
+		this.location = (String) event.getLocation();
+		this.rate = (Double) event.getRate();
+		this.size = BikeSize.fromValue((String)event.getSize());
 		this.rentCost = 0d;
 		this.addEvent(event);
 		return this;
 	}
 
-	public boolean rent(BikeRentCommand pikeRentCommand) {
-		Assert.notNull(pikeRentCommand.getRentedBy(), "Renter ID should be set");
+	public boolean rent(BikeRentCommand cmd) {
+		Assert.notNull(cmd.getRentedBy(), "Renter ID should be set");
 
-		Map<String, Object> metadata = new HashMap<>();
-		metadata.put("rentedBy", pikeRentCommand.getRentedBy());
-
-		BikeEvent event =
-				new BikeEvent(this.getId()
-						, BikeEventType.BIKE_RENTED
-						, LocalDateTime.now(), metadata);
+		BikeRentedEvent event =
+				new BikeRentedEvent(this.getId()
+						, cmd.getRentedBy()
+						, LocalDateTime.now(), new HashMap<>());
 
 		pikeRented(event);
 		return true;
 	}
 
-	private Bike pikeRented(BikeEvent event) {
-		if (event.getEventType() != BikeEventType.BIKE_RENTED) {
-			return this;
-		}
-		log.info("event source: {}", event.getEventType().getValue());
+	private Bike pikeRented(BikeRentedEvent event) {
+		log.info("event sourced: {}", event.getEventType());
 		this.availability = false;
-		this.rentedBy = (String)event.getEventMetadata().get("rentedBy");
+		this.rentedBy = (String)event.getRentedBy();
 		this.rentStartTime = event.getEventDate();
 		this.addEvent(event);
 		return this;
 	}
 
-	public boolean returnPike(BikeReturnCommand pikeReturnCommand) {
-		Assert.notNull(pikeReturnCommand.getLocation(), "Pike location should not be null");
+	public boolean returnPike(BikeReturnCommand cmd) {
+		Assert.notNull(cmd.getLocation(), "Pike location should not be null");
 
 		Duration between = Duration.between(this.rentStartTime, LocalDateTime.now());
 		Double charge = this.rate * between.getSeconds();
 		DecimalFormat df = new DecimalFormat("#.00");
 
-		Map<String, Object> metadata = new HashMap<>();
-		metadata.put("location", pikeReturnCommand.getLocation());
-		metadata.put("cost", df.format(charge));
-
-		BikeEvent event =
-				new BikeEvent(this.getId()
-						, BikeEventType.BIKE_RETURNED
-						, LocalDateTime.now(), metadata);
+		BikeReturnedEvent event =
+				new BikeReturnedEvent(this.getId()
+						, cmd.getLocation()
+						, Double.valueOf(df.format(charge))
+						, LocalDateTime.now(), new HashMap<>());
 		
 		pikeReturned(event);
 		return true;
 	}
 
-	private Bike pikeReturned(BikeEvent event) {
-		if (event.getEventType() != BikeEventType.BIKE_RETURNED) {
-			return this;
-		}
-		log.info("event source: {}", event.getEventType().getValue());
+	private Bike pikeReturned(BikeReturnedEvent event) {
+		log.info("event source: {}", event.getEventType());
 		this.availability = true;
-		this.location = (String)event.getEventMetadata().get("location");
-		this.rentCost = Double.valueOf((String)event.getEventMetadata().get("cost"));
+		this.location = (String)event.getLocation();
+		this.rentCost = event.getCost();
 		this.addEvent(event);
 		return this;
 	}
 
-	public void addEvent(BikeEvent event) {
+	public void addEvent(BikeBaseEvent event) {
 		this.events.add(event);
 	}
 
@@ -184,7 +157,7 @@ public class Bike {
 		this.events.clear();
 	}
 
-	public List<BikeEvent> getEvents() {
+	public List<BikeBaseEvent> getEvents() {
 		return Collections.unmodifiableList(events);
 	}
 
@@ -199,9 +172,9 @@ public class Bike {
 
 	public Bike handleEvent(BikeEvent event) {
 		return API.Match(event.getEventType()).of(
-				Case(Predicates.is(BikeEventType.BIKE_CREATED), this.pikeCreated(event)),
-				Case(Predicates.is(BikeEventType.BIKE_RENTED), this.pikeRented(event)),
-				Case(Predicates.is(BikeEventType.BIKE_RETURNED), this.pikeReturned(event))
+				Case(Predicates.is(BikeEventTypes.BIKE_CREATED), this.pikeCreated((BikeCreatedEvent) event)),
+				Case(Predicates.is(BikeEventTypes.BIKE_RENTED), this.pikeRented((BikeRentedEvent) event)),
+				Case(Predicates.is(BikeEventTypes.BIKE_RETURNED), this.pikeReturned((BikeReturnedEvent) event))
 		);
 	}
 
