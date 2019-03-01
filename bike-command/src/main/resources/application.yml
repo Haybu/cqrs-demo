@@ -5,7 +5,7 @@ server:
 
 spring:
   application:
-    name: pike_cqrs_read
+    name: bike_cqrs_read
   cloud:
     stream:
       bindings:

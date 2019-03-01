@@ -30,44 +30,44 @@ import java.util.List;
 @Service
 public class BikeCmdService {
 
-    private final BikeCmdRepository pikeRepository;
+    private final BikeCmdRepository repository;
 
-	public BikeCmdService(BikeCmdRepository pikeRepository) {
-		this.pikeRepository = pikeRepository;
+	public BikeCmdService(BikeCmdRepository repository) {
+		this.repository = repository;
 	}
 
-	public String createPike(BikeCreateCommand pikeCreateCommand) {
-		Bike pike = new Bike(pikeCreateCommand);
-		pikeRepository.save(pike);
-		return pike.getId();
+	public String createBike(BikeCreateCommand cmd) {
+		Bike bike = new Bike(cmd);
+		repository.save(bike);
+		return bike.getId();
 	}
 
-	public boolean rentPike(BikeRentCommand pikeRentCommand) {
-		Bike pike = pikeRepository.findById(pikeRentCommand.getSubjectId());
-		boolean result = pike.rent(pikeRentCommand);
+	public boolean rentBike(BikeRentCommand cmd) {
+		Bike bike = repository.findById(cmd.getSubjectId());
+		boolean result = bike.rent(cmd);
 		if (result) {
-			pikeRepository.save(pike);
+			repository.save(bike);
 			return true;
 		}
 		return false;
 	}
 
 
-	public boolean returnPike(BikeReturnCommand pikeReturnCommand) {
-		Bike pike = pikeRepository.findById(pikeReturnCommand.getSubjectId());
-		boolean result = pike.returnPike(pikeReturnCommand);
+	public boolean returnBike(BikeReturnCommand cmd) {
+		Bike bike = repository.findById(cmd.getSubjectId());
+		boolean result = bike.returnBike(cmd);
 		if (result) {
-			pikeRepository.save(pike);
+			repository.save(bike);
 			return true;
 		}
 		return false;
 	}
 
-	public List<Bike> getAllPikes() {
-		return pikeRepository.findAll();
+	public List<Bike> getAllBikes() {
+		return repository.findAll();
 	}
 
 	public Bike getById(String id) {
-		return pikeRepository.findById(id);
+		return repository.findById(id);
 	}
 }

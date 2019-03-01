@@ -24,12 +24,12 @@ import org.springframework.messaging.MessageChannel;
 
 public interface BikeEventChannels {
 
-	String PIKE_EVENTS_IN = "input";
-	String PIKE_EVENTS_OUT = "output";
+	String BIKE_EVENTS_IN = "input";
+	String BIKE_EVENTS_OUT = "output";
 
-	@Output(PIKE_EVENTS_OUT)
+	@Output(BIKE_EVENTS_OUT)
 	MessageChannel output();
 
-	@Input(PIKE_EVENTS_IN)
+	@Input(BIKE_EVENTS_IN)
 	KStream<?, ?> input();
 }

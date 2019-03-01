@@ -60,25 +60,25 @@ public class BikeEventPubSub {
 				.setHeader(KafkaHeaders.MESSAGE_KEY, event.getEventSubject().getBytes())
 				.setHeader(HEADER_EVENT_TYPE, event.getEventType())
 				.build();
-		log.info("start publishing create pike event..");
+		log.info("start publishing create bike event..");
 		channels.output().send(message);
-		log.info("finish publishing create pike event..");
+		log.info("finish publishing create bike event..");
 	}
 
 	// Kafka KTable of aggregate snapshot
-	@StreamListener(BikeEventChannels.PIKE_EVENTS_IN)
+	@StreamListener(BikeEventChannels.BIKE_EVENTS_IN)
 	public void snapshot(KStream<String, BikeEvent> events) {
-		Serde<BikeEvent> pikeEventSerde = new JsonSerde<>( BikeEvent.class, new ObjectMapper() );
-		Serde<Bike> pikeSerde = new JsonSerde<>( Bike.class, new ObjectMapper() );
+		Serde<BikeEvent> bikeEventSerde = new JsonSerde<>( BikeEvent.class, new ObjectMapper() );
+		Serde<Bike> bikeSerde = new JsonSerde<>( Bike.class, new ObjectMapper() );
 
 		events
 				//.groupBy( (s, event) -> event.getEventSubject(),
-				//Serialized.with(Serdes.String(), pikeEventSerde) )
+				//Serialized.with(Serdes.String(), bikeEventSerde) )
 				.groupByKey()
-				.aggregate(Bike::new, (key, event, pike) -> ((Bike) pike).handleEvent(event),
+				.aggregate(Bike::new, (key, event, bike) -> ((Bike) bike).handleEvent(event),
 						Materialized.<String, Bike, KeyValueStore<Bytes, byte[]>>as(EVENTS_SNAPSHOT)
 								.withKeySerde(Serdes.String())
-								.withValueSerde(pikeSerde)
+								.withValueSerde(bikeSerde)
 				);
 	}
 

@@ -36,43 +36,43 @@ import java.util.List;
 @Slf4j
 public class BikeCmdController {
 
-	private final BikeCmdService pikeService;
+	private final BikeCmdService bikeService;
 
-	public BikeCmdController(BikeCmdService pikeService) {
-		this.pikeService = pikeService;
+	public BikeCmdController(BikeCmdService bikeService) {
+		this.bikeService = bikeService;
 	}
 
 	@PostMapping("/")
-	public String createPike(@RequestBody BikeCreateCommand cmd) {
+	public String createBike(@RequestBody BikeCreateCommand cmd) {
 		log.info("creating command received: " + cmd);
-		return pikeService.createPike(cmd);
+		return bikeService.createBike(cmd);
 	}
 
 	@PostMapping("/{id}/rent")
-	public boolean rentPike(@PathVariable String id, @RequestBody BikeRentCommand cmd) {
+	public boolean rentBike(@PathVariable String id, @RequestBody BikeRentCommand cmd) {
 		cmd.setSubjectId(id);
-		return pikeService.rentPike(cmd);
+		return bikeService.rentBike(cmd);
 	}
 
 	@PostMapping("/{id}/return")
-	public boolean returnPike(@PathVariable String id, @RequestBody BikeReturnCommand cmd) {
+	public boolean returnBike(@PathVariable String id, @RequestBody BikeReturnCommand cmd) {
 		cmd.setSubjectId(id);
-		return pikeService.returnPike(cmd);
+		return bikeService.returnBike(cmd);
 	}
 
 	/*
 	hidden behind a proxy. Responsible to read aggregates only
 	 */
 	@GetMapping("/")
-	public List<Bike> allPikes() {
-		return pikeService.getAllPikes();
+	public List<Bike> allBikes() {
+		return bikeService.getAllBikes();
 	}
 
 	/*
 	hidden behind a proxy. Responsible to read aggregates only
 	 */
 	@GetMapping("/{id}")
-	public Bike pikeById(@PathVariable String id) {
-		return pikeService.getById(id);
+	public Bike BikeById(@PathVariable String id) {
+		return bikeService.getById(id);
 	}
 }

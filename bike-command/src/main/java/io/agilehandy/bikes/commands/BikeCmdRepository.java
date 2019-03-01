@@ -41,9 +41,9 @@ public class BikeCmdRepository {
 		this.queryableStoreRegistry = registry;
 	}
 
-	public void save(Bike pike) {
-		pike.getEvents().stream().forEach(e -> pubsub.publish(e));
-		pike.flush();
+	public void save(Bike bike) {
+		bike.getEvents().stream().forEach(e -> pubsub.publish(e));
+		bike.flush();
 	}
 
 	public Bike findById(String id) {
@@ -58,11 +58,11 @@ public class BikeCmdRepository {
 				queryableStoreRegistry.getQueryableStoreType(BikeEventPubSub.EVENTS_SNAPSHOT
 						, QueryableStoreTypes.<String, Bike>keyValueStore());
 		KeyValueIterator<String, Bike> all = queryStore.all();
-		List<Bike> pikes = new ArrayList<>();
+		List<Bike> bikes = new ArrayList<>();
 		while(all.hasNext()) {
-			pikes.add(all.next().value);
+			bikes.add(all.next().value);
 		}
-		return pikes;
+		return bikes;
 	}
 
 }

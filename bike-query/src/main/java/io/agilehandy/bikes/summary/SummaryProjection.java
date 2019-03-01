@@ -55,7 +55,7 @@ public class SummaryProjection {
 	public void createSummaryProjection(@Payload BikeBaseEvent event) {
 		log.info("Summary projected from bike created event");
 		Summary summary = new Summary();
-		summary.setPikeId(event.getEventSubject());
+		summary.setBikeId(event.getEventSubject());
 		summary.setNumberOfRents(0);
 		summary.setTotalRevenue(0d);
 		repository.save(summary);

@@ -37,7 +37,7 @@ import javax.persistence.Id;
 public class Summary {
 
 	@Id
-	String pikeId;
+	String bikeId;
 
 	Integer numberOfRents;
 

@@ -75,9 +75,9 @@ public class Bike {
 	public Bike() {}
 
 	public Bike(BikeCreateCommand cmd) {
-		Assert.notNull(cmd.getSize(), "Pike size should not be null");
-		Assert.notNull(cmd.getRate(), "Pike rent rate should assigned");
-		Assert.notNull(cmd.getLocation(), "Pike location should not be null");
+		Assert.notNull(cmd.getSize(), "Bike size should not be null");
+		Assert.notNull(cmd.getRate(), "Bike rent rate should assigned");
+		Assert.notNull(cmd.getLocation(), "Bike location should not be null");
 
 		BikeCreatedEvent event =
 				new BikeCreatedEvent(
@@ -87,10 +87,10 @@ public class Bike {
 						cmd.getSize().getValue(),
 						LocalDateTime.now(), new HashMap<>());
 
-		pikeCreated(event);
+		bikeCreated(event);
 	}
 
-	public Bike pikeCreated(BikeCreatedEvent event) {
+	public Bike bikeCreated(BikeCreatedEvent event) {
 		log.info("event sourced: {}", event.getEventType());
 		this.id = event.getEventSubject();
 		this.availability = true;
@@ -110,11 +110,11 @@ public class Bike {
 						, cmd.getRentedBy()
 						, LocalDateTime.now(), new HashMap<>());
 
-		pikeRented(event);
+		bikeRented(event);
 		return true;
 	}
 
-	private Bike pikeRented(BikeRentedEvent event) {
+	private Bike bikeRented(BikeRentedEvent event) {
 		log.info("event sourced: {}", event.getEventType());
 		this.availability = false;
 		this.rentedBy = (String)event.getRentedBy();
@@ -123,8 +123,8 @@ public class Bike {
 		return this;
 	}
 
-	public boolean returnPike(BikeReturnCommand cmd) {
-		Assert.notNull(cmd.getLocation(), "Pike location should not be null");
+	public boolean returnBike(BikeReturnCommand cmd) {
+		Assert.notNull(cmd.getLocation(), "Bike location should not be null");
 
 		Duration between = Duration.between(this.rentStartTime, LocalDateTime.now());
 		Double charge = this.rate * between.getSeconds();
@@ -136,11 +136,11 @@ public class Bike {
 						, Double.valueOf(df.format(charge))
 						, LocalDateTime.now(), new HashMap<>());
 		
-		pikeReturned(event);
+		bikeReturned(event);
 		return true;
 	}
 
-	private Bike pikeReturned(BikeReturnedEvent event) {
+	private Bike bikeReturned(BikeReturnedEvent event) {
 		log.info("event source: {}", event.getEventType());
 		this.availability = true;
 		this.location = (String)event.getLocation();
@@ -162,19 +162,19 @@ public class Bike {
 	}
 
 	/**
-	public static Pike sourceFrom(List<PikeEvent> events) {
+	public static Bike sourceFrom(List<BikeEvent> events) {
 		return javaslang.collection.List.ofAll(events).foldLeft(
-				new Pike(),
-				Pike::handleEvent
+				new Bike(),
+				Bike::handleEvent
 		);
 	}
 	 */
 
 	public Bike handleEvent(BikeEvent event) {
 		return API.Match(event.getEventType()).of(
-				Case(Predicates.is(BikeEventTypes.BIKE_CREATED), this.pikeCreated((BikeCreatedEvent) event)),
-				Case(Predicates.is(BikeEventTypes.BIKE_RENTED), this.pikeRented((BikeRentedEvent) event)),
-				Case(Predicates.is(BikeEventTypes.BIKE_RETURNED), this.pikeReturned((BikeReturnedEvent) event))
+				Case(Predicates.is(BikeEventTypes.BIKE_CREATED), this.bikeCreated((BikeCreatedEvent) event)),
+				Case(Predicates.is(BikeEventTypes.BIKE_RENTED), this.bikeRented((BikeRentedEvent) event)),
+				Case(Predicates.is(BikeEventTypes.BIKE_RETURNED), this.bikeReturned((BikeReturnedEvent) event))
 		);
 	}
 
